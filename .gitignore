@@ -1,1 +1,4 @@
-output
+images/output/*
+!images/output/readme.md
+results/*
+!results/readme.md

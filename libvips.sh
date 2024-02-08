@@ -1,66 +1,58 @@
 #!/bin/bash
 
-# Benchmarked using `time ./libvips.sh`
+# MacBook M3 Pro - 36GB memory
+# Libvips 8.15.1
 
-INPUT_PATH="./images/input/1.jpg"
+# Some constant variables
+INPUT_DIR="./images/input"
+OUTPUT_DIR="./images/output"
+PERFORMANCE_FILE="./results/libvips-results.txt"
 
-TestCropping () {
-    for i in 1 2 3 4 5 6 7 8 9 10
-    do
-        # gm convert $INPUT_PATH -crop 100x100+10+10 ./images/output/1-cropped.jpg
-        vips crop $INPUT_PATH ./images/output/1-cropped.jpg 10 10 110 110
+# Delete the performance results
+rm -f $PERFORMANCE_FILE
+
+# Test cropping functionality
+TestCrop() {
+    for input_image in $INPUT_DIR/*.jpg; do
+        output_image="$OUTPUT_DIR/$(basename "$input_image" .jpg)-cropped.jpg"
+        command="vips crop $input_image $output_image 10 10 110 110"
+        duration=$( { time $command; } 2>&1 | grep "real" | awk '{print substr($2, 3)}' | sed 's/s//')        
+        echo $duration >> $PERFORMANCE_FILE
     done
 }
 
-TestCompression () {
-    for i in 1 2 3 4 5 6 7 8 9 10
-    do
-        vips jpegsave $INPUT_PATH ./images/output/1-compressed.jpg --optimize-coding -Q 90
+# Test compression functionality
+TestCompress() {
+    for input_image in $INPUT_DIR/*.jpg; do
+        output_image="$OUTPUT_DIR/$(basename "$input_image" .jpg)-compressed.jpg"
+        command="vips jpegsave $input_image $output_image --optimize-coding -Q 90"
+        duration=$( { time $command; } 2>&1 | grep "real" | awk '{print substr($2, 3)}' | sed 's/s//')
+        echo $duration >> $PERFORMANCE_FILE
     done
 }
 
-TestResize () {
-    for i in 1 2 3 4 5 6 7 8 9 10
-    do
-        vips resize $INPUT_PATH ./images/output/1-resized.jpg 0.5
+# Test resize functionality
+TestResize() {
+    for input_image in $INPUT_DIR/*.jpg; do
+        output_image="$OUTPUT_DIR/$(basename "$input_image" .jpg)-resized.jpg"
+        command="vips resize $input_image $output_image 0.5"
+        duration=$( { time $command; } 2>&1 | grep "real" | awk '{print substr($2, 3)}' | sed 's/s//')
+        echo $duration >> $PERFORMANCE_FILE
     done
 }
 
-TestFormat () {
-    for i in 1 2 3 4 5 6 7 8 9 10
-    do
-        vips copy $INPUT_PATH ./images/output/1-format.webp
+# Test image format conversion
+TestConvert() {
+    for input_image in $INPUT_DIR/*.jpg; do
+        output_image="$OUTPUT_DIR/$(basename "$input_image" .jpg)-format.webp"
+        command="vips copy $input_image $output_image"
+        duration=$( { time $command; } 2>&1 | grep "real" | awk '{print substr($2, 3)}' | sed 's/s//')
+        echo $duration >> $PERFORMANCE_FILE
     done
 }
 
-# TestCropping
-# Time in seconds for 10 iterations:
-# 2.10
-# 2.12
-# 2.10
-# 2.12
-# 2.12
-
-# TestCompression
-# Time in seconds for 10 iterations:
-# 4.91
-# 4.94
-# 4.94
-# 4.95
-# 4.94
-
-# TestResize
-# Time in seconds for 10 iterations:
-# 3.10
-# 3.09
-# 3.10
-# 3.13
-# 3.13
-
-# TestFormat
-# Time in seconds for 10 iterations:
-# 23.89
-# 23.79
-# 23.88
-# 23.56
-# 23.88
+# Run the tests
+TestCrop
+TestCompress
+TestResize
+TestConvert

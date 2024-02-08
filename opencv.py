@@ -4,82 +4,75 @@
 
 import time
 import cv2
+import os
+from pathlib import Path
 
-N_ITERATIONS = 10
-INPUT_PATH = "./images/input/1.jpg"
+INPUT_DIR = "./images/input"
 OUTPUT_DIR = "./images/output"
+PERFORMANCE_FILE = "./results/opencv-results.txt"
 COMPRESSED_QUALITY = 90
 
-def load_image():
-    return cv2.imread(INPUT_PATH)
+# remove the performance results file if it exists
+if os.path.exists(PERFORMANCE_FILE):
+    os.remove(PERFORMANCE_FILE)
 
-def test_cropping() -> None:
-    start_time = time.perf_counter()
-    for i in range(N_ITERATIONS):
-        im = load_image()
-        cropped_image = im[10:110, 10:110]
-        cv2.imwrite(f"{OUTPUT_DIR}/1-cropped.jpg", cropped_image)
-    stop_time = time.perf_counter()
-    duration = stop_time - start_time
-    print(f'The cropping of {N_ITERATIONS} images took {duration:.3f} seconds')
+def get_image_paths():
+    image_paths = []
+    for filename in os.listdir(INPUT_DIR):
+        if filename.endswith(".jpg") or filename.endswith(".jpeg") or filename.endswith(".png"):
+            image_path = os.path.join(INPUT_DIR, filename)
+            image_paths.append(image_path)
+    image_paths.sort()
+    return image_paths
 
-def test_compression() -> None:
-    start_time = time.perf_counter()
-    for i in range(N_ITERATIONS):
-        im = load_image()
-        cv2.imwrite(f'{OUTPUT_DIR}/1-compressed.jpg', im, [cv2.IMWRITE_JPEG_QUALITY, COMPRESSED_QUALITY])
-    stop_time = time.perf_counter()
-    duration = stop_time - start_time
-    print(f'The compression of {N_ITERATIONS} images took {duration:.3f} seconds')
+def test_crop() -> None:
+    image_paths = get_image_paths()
+    with open(PERFORMANCE_FILE, "a") as file:
+        for image_path in image_paths:
+            start_time = time.perf_counter()
+            im = cv2.imread(image_path)
+            cropped_image = im[10:110, 10:110]
+            cv2.imwrite(f"{OUTPUT_DIR}/{Path(image_path).stem}-cropped.jpg", cropped_image)
+            stop_time = time.perf_counter()
+            duration = stop_time - start_time
+            file.write(f'{duration}\n')
+
+def test_compress() -> None:
+    image_paths = get_image_paths()
+    with open(PERFORMANCE_FILE, "a") as file:
+        for image_path in image_paths:
+            start_time = time.perf_counter()
+            im = cv2.imread(image_path)
+            cv2.imwrite(f'{OUTPUT_DIR}/{Path(image_path).stem}-compressed.jpg', im, [cv2.IMWRITE_JPEG_QUALITY, COMPRESSED_QUALITY])
+            stop_time = time.perf_counter()
+            duration = stop_time - start_time
+            file.write(f'{duration}\n')
 
 def test_resize() -> None:
-    start_time = time.perf_counter()
-    for i in range(N_ITERATIONS):
-        im = load_image()
-        new_dimensions = (len(im[0]) // 2, len(im) // 2)
-        im_resized = cv2.resize(im, new_dimensions)
-        cv2.imwrite(f'{OUTPUT_DIR}/1-resized.jpg', im_resized)
-    stop_time = time.perf_counter()
-    duration = stop_time - start_time
-    print(f'The resizing of {N_ITERATIONS} images took {duration:.3f} seconds')
+    image_paths = get_image_paths()
+    with open(PERFORMANCE_FILE, "a") as file:
+        for image_path in image_paths:
+            start_time = time.perf_counter()
+            im = cv2.imread(image_path)
+            new_dimensions = (len(im[0]) // 2, len(im) // 2)
+            im_resized = cv2.resize(im, new_dimensions)
+            cv2.imwrite(f'{OUTPUT_DIR}/{Path(image_path).stem}-resized.jpg', im_resized)
+            stop_time = time.perf_counter()
+            duration = stop_time - start_time
+            file.write(f'{duration}\n')
 
-def test_format_convert() -> None:
-    start_time = time.perf_counter()
-    for i in range(N_ITERATIONS):
-        im = load_image()
-        cv2.imwrite(f'{OUTPUT_DIR}/1-format.webp', im)
-    stop_time = time.perf_counter()
-    duration = stop_time - start_time
-    print(f'The conversion of {N_ITERATIONS} images took {duration:.3f} seconds')
+def test_convert() -> None:
+    image_paths = get_image_paths()
+    with open(PERFORMANCE_FILE, "a") as file:
+        for image_path in image_paths:
+            start_time = time.perf_counter()
+            im = cv2.imread(image_path)
+            cv2.imwrite(f'{OUTPUT_DIR}/{Path(image_path).stem}-format.webp', im)
+            stop_time = time.perf_counter()
+            duration = stop_time - start_time
+            file.write(f'{duration}\n')
 
-# test_cropping()
-# Time in seconds for 10 iterations:
-# 2.041
-# 2.072
-# 2.065
-# 2.066
-# 2.057
-    
-# test_compression()
-# Time in seconds for 10 iterations:
-# 2.712
-# 2.724
-# 2.718
-# 2.713
-# 2.752
-    
-# test_resize()
-# Time in seconds for 10 iterations:
-# 2.288
-# 2.287
-# 2.287
-# 2.297
-# 2.317
-
-# test_format_convert()
-# Time in seconds for 10 iterations:
-# 134.731
-# 136.419
-# 135.692
-# 136.200
-# 135.913
+test_crop()
+test_compress()
+test_resize()
+test_convert()

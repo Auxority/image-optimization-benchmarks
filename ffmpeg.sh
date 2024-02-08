@@ -1,65 +1,55 @@
-#!/bin/bash
+# !/bin/bash
 
-# Benchmarked using `time ./ffmpeg.sh`
+# Some constant variables
+INPUT_DIR="./images/input"
+OUTPUT_DIR="./images/output"
+PERFORMANCE_FILE="./results/ffmpeg-results.txt"
 
-INPUT_PATH="./images/input/1.jpg"
+# Delete the performance results
+rm -f $PERFORMANCE_FILE
 
-TestCropping () {
-    for i in 1 2 3 4 5 6 7 8 9 10
-    do
-        ffmpeg -i $INPUT_PATH -vf "crop=100:100:10:10" ./images/output/1-cropped.jpg -y -hide_banner -loglevel error
-    done 
-}
-
-TestCompression () {
-    for i in 1 2 3 4 5 6 7 8 9 10
-    do
-        ffmpeg -i $INPUT_PATH -compression_level 90 ./images/output/1-compressed.jpg -y -hide_banner -loglevel error
+# Test cropping functionality
+TestCrop() {
+    for input_image in $INPUT_DIR/*.jpg; do
+        output_image="$OUTPUT_DIR/$(basename "$input_image" .jpg)-cropped.jpg"
+        command="ffmpeg -i $input_image -vf crop=100:100:10:10 $output_image -y -hide_banner -loglevel error"
+        duration=$( { time $command; } 2>&1 | grep "real" | awk '{print substr($2, 3)}' | sed 's/s//')
+        echo $duration >> $PERFORMANCE_FILE
     done
 }
 
-TestResize () {
-    for i in 1 2 3 4 5 6 7 8 9 10
-    do
-        ffmpeg -i $INPUT_PATH -vf scale="iw/2:ih/2" ./images/output/1-resized.jpg -y -hide_banner -loglevel error
+# Test compression functionality
+TestCompress() {
+    for input_image in $INPUT_DIR/*.jpg; do
+        output_image="$OUTPUT_DIR/$(basename "$input_image" .jpg)-compressed.jpg"
+        command="ffmpeg -i $input_image -compression_level 90 $output_image -y -hide_banner -loglevel error"
+        duration=$( { time $command; } 2>&1 | grep "real" | awk '{print substr($2, 3)}' | sed 's/s//')
+        echo $duration >> $PERFORMANCE_FILE
     done
 }
 
-TestFormat () {
-    for i in 1 2 3 4 5 6 7 8 9 10
-    do
-        ffmpeg -i $INPUT_PATH ./images/output/1-format.webp -y -hide_banner -loglevel error
+# Test resize functionality
+TestResize() {
+    for input_image in $INPUT_DIR/*.jpg; do
+        output_image="$OUTPUT_DIR/$(basename "$input_image" .jpg)-resized.jpg"
+        command="ffmpeg -i $input_image -vf scale=iw/2:ih/2 $output_image -y -hide_banner -loglevel error"
+        duration=$( { time $command; } 2>&1 | grep "real" | awk '{print substr($2, 3)}' | sed 's/s//')
+        echo $duration >> $PERFORMANCE_FILE
     done
 }
 
-# TestCropping
-# Time in seconds for 10 iterations:
-# 1.59
-# 1.59
-# 1.59
-# 1.59
-# 1.60
+# Test image format conversion
+TestConvert() {
+    for input_image in $INPUT_DIR/*.jpg; do
+        output_image="$OUTPUT_DIR/$(basename "$input_image" .jpg)-format.webp"
+        command="ffmpeg -i $input_image $output_image -y -hide_banner -loglevel error"
+        duration=$( { time $command; } 2>&1 | grep "real" | awk '{print substr($2, 3)}' | sed 's/s//')
+        echo $duration >> $PERFORMANCE_FILE
+    done
+}
 
-# TestCompression
-# Time in seconds for 10 iterations:
-# 2.97
-# 2.96
-# 3.00
-# 3.01
-# 2.99
-
-# TestResize
-# Time in seconds for 10 iterations:
-# 2.26
-# 2.28
-# 2.31
-# 2.30
-# 2.30
-
-# TestFormat
-# Time in seconds for 10 iterations:
-# 23.73
-# 23.49
-# 23.52
-# 23.64
-# 23.75
+# Run the tests
+TestCrop
+TestCompress
+TestResize
+TestConvert

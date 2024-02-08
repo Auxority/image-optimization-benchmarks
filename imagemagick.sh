@@ -1,65 +1,55 @@
 #!/bin/bash
 
-# Benchmarked using `time ./imagemagick.sh`
+# Some constant variables
+INPUT_DIR="./images/input"
+OUTPUT_DIR="./images/output"
+PERFORMANCE_FILE="./results/imagemagick-results.txt"
 
-INPUT_PATH="./images/input/1.jpg"
+# Delete the performance results
+rm -f $PERFORMANCE_FILE
 
-TestCropping () {
-    for i in 1 2 3 4 5 6 7 8 9 10
-    do
-        convert $INPUT_PATH -crop 100x100+10+10 ./images/output/1-cropped.jpg
+# Test cropping functionality
+TestCrop() {
+    for input_image in $INPUT_DIR/*.jpg; do
+        output_image="$OUTPUT_DIR/$(basename "$input_image" .jpg)-cropped.jpg"
+        command="convert $input_image -crop 100x100+10+10 $output_image"
+        duration=$( { time $command; } 2>&1 | grep "real" | awk '{print substr($2, 3)}' | sed 's/s//')        
+        echo $duration >> $PERFORMANCE_FILE
     done
 }
 
-TestCompression () {
-    for i in 1 2 3 4 5 6 7 8 9 10
-    do
-        convert $INPUT_PATH -quality 90 ./images/output/1-compressed.jpg
+# Test compression functionality
+TestCompress() {
+    for input_image in $INPUT_DIR/*.jpg; do
+        output_image="$OUTPUT_DIR/$(basename "$input_image" .jpg)-compressed.jpg"
+        command="convert $input_image -quality 90 $output_image"
+        duration=$( { time $command; } 2>&1 | grep "real" | awk '{print substr($2, 3)}' | sed 's/s//')
+        echo $duration >> $PERFORMANCE_FILE
     done
 }
 
-TestResize () {
-    for i in 1 2 3 4 5 6 7 8 9 10
-    do
-        convert $INPUT_PATH -resize 50% ./images/output/1-resized.jpg
+# Test resize functionality
+TestResize() {
+    for input_image in $INPUT_DIR/*.jpg; do
+        output_image="$OUTPUT_DIR/$(basename "$input_image" .jpg)-resized.jpg"
+        command="convert $input_image -resize 50% $output_image"
+        duration=$( { time $command; } 2>&1 | grep "real" | awk '{print substr($2, 3)}' | sed 's/s//')
+        echo $duration >> $PERFORMANCE_FILE
     done
 }
 
-TestFormat () {
-    for i in 1 2 3 4 5 6 7 8 9 10
-    do
-        convert $INPUT_PATH ./images/output/1-format.webp
+# Test image format conversion
+TestConvert() {
+    for input_image in $INPUT_DIR/*.jpg; do
+        output_image="$OUTPUT_DIR/$(basename "$input_image" .jpg)-format.webp"
+        command="convert $input_image $output_image"
+        duration=$( { time $command; } 2>&1 | grep "real" | awk '{print substr($2, 3)}' | sed 's/s//')
+        echo $duration >> $PERFORMANCE_FILE
     done
 }
 
-# TestCropping
-# Time in seconds for 10 iterations:
-# 2.37
-# 2.36
-# 2.38
-# 2.39
-# 2.39
-
-# TestCompression
-# Time in seconds for 10 iterations:
-# 4.59
-# 4.57
-# 4.57
-# 4.59
-# 4.58
-
-# TestResize
-# Time in seconds for 10 iterations:
-# 11.55
-# 11.58
-# 11.56
-# 11.59
-# 11.55
-
-# TestFormat
-# Time in seconds for 10 iterations:
-# 24.13
-# 24.17
-# 24.89
-# 24.76
-# 24.45
+# Run the tests
+TestCrop
+TestCompress
+TestResize
+TestConvert
