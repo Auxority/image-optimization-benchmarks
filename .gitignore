@@ -1,6 +1,6 @@
 .DS_Store
 images/input
-# images/output/*
-# !images/output/readme.md
+images/output/*
+!images/output/readme.md
 results/*
 !results/readme.md
