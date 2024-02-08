@@ -24,3 +24,9 @@ python3 ./opencv.py
 ```
 
 The results will be outputted to the results directory.
+
+# Results
+You can use the `visualize.ipynb` Jupyter Notebook to generate the visualizations of the results.
+
+# Conclusion
+Even though OpenCV scores high in many categories, it falls far behind during the `Convert` operation. FFmpeg isn't the greatest at anything, but is overall the best.
