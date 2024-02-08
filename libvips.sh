@@ -8,9 +8,6 @@ INPUT_DIR="./images/input"
 OUTPUT_DIR="./images/output"
 PERFORMANCE_FILE="./results/libvips-results.txt"
 
-# Delete the performance results
-rm -f $PERFORMANCE_FILE
-
 # Test cropping functionality
 TestCrop() {
     for input_image in $INPUT_DIR/*.jpg; do

@@ -14,19 +14,8 @@ pip install -r requirements.txt
 ```
 
 # Running the tests:
-```sh
-./ffmpeg.sh
-./graphicsmagick.sh
-./imagemagick.sh
-./libvips.sh
-python3 ./pillow.py
-python3 ./opencv.py
-```
-
-The results will be outputted to the results directory.
-
-# Results
-You can use the `visualize.ipynb` Jupyter Notebook to generate the visualizations of the results.
+Open the `visualize.ipynb` file and run the cells to generate the data and visualizations.
 
 # Conclusion
-Even though OpenCV scores high in many categories, it falls far behind during the `Convert` operation. FFmpeg isn't the greatest at anything, but is overall the best.
+Based on five runs of the benchmarks, the following conclusions can be drawn:
+Even though OpenCV scores high in many categories, it falls far behind during the `Convert` operation. FFmpeg isn't the greatest at anything, but is overall the best. But when you combine OpenCV and ImageMagick, it seems to be the fastest option.

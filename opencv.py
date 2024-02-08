@@ -12,10 +12,6 @@ OUTPUT_DIR = "./images/output"
 PERFORMANCE_FILE = "./results/opencv-results.txt"
 COMPRESSED_QUALITY = 90
 
-# remove the performance results file if it exists
-if os.path.exists(PERFORMANCE_FILE):
-    os.remove(PERFORMANCE_FILE)
-
 def get_image_paths():
     image_paths = []
     for filename in os.listdir(INPUT_DIR):
