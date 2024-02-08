@@ -56,7 +56,7 @@ TestFormat () {
 # 2.30
 # 2.30
 
-# TestFormat
+TestFormat
 # Time in seconds for 10 iterations:
 # 23.73
 # 23.49
