@@ -32,6 +32,7 @@ def test_crop() -> None:
             cv2.imwrite(output_path, cropped_image)
             stop_time = time.perf_counter()
             duration = stop_time - start_time
+            print(f'{OUTPUT_DIR}/{Path(image_path).stem}-crop{Path(image_path).suffix} {duration}')
             file.write(f'{duration}\n')
 
 def test_compress() -> None:
@@ -44,6 +45,7 @@ def test_compress() -> None:
             cv2.imwrite(output_path, im, [cv2.IMWRITE_JPEG_QUALITY, COMPRESSED_QUALITY])
             stop_time = time.perf_counter()
             duration = stop_time - start_time
+            print(f'{OUTPUT_DIR}/{Path(image_path).stem}-compress{Path(image_path).suffix} {duration}')
             file.write(f'{duration}\n')
 
 def test_resize() -> None:
@@ -58,6 +60,7 @@ def test_resize() -> None:
             cv2.imwrite(output_path, im_resized)
             stop_time = time.perf_counter()
             duration = stop_time - start_time
+            print(f'{OUTPUT_DIR}/{Path(image_path).stem}-resize{Path(image_path).suffix} {duration}')
             file.write(f'{duration}\n')
 
 def test_convert() -> None:
@@ -69,6 +72,7 @@ def test_convert() -> None:
             cv2.imwrite(f'{OUTPUT_DIR}/{Path(image_path).stem}-convert.webp', im)
             stop_time = time.perf_counter()
             duration = stop_time - start_time
+            print(f'{OUTPUT_DIR}/{Path(image_path).stem}-convert{Path(image_path).suffix} {duration}')
             file.write(f'{duration}\n')
 
 test_crop()
