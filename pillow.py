@@ -15,7 +15,7 @@ COMPRESSED_QUALITY = 90
 def get_image_paths():
     image_paths = []
     for filename in os.listdir(INPUT_DIR):
-        if filename.endswith(".jpg") or filename.endswith(".jpeg") or filename.endswith(".png"):
+        if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')):
             image_path = os.path.join(INPUT_DIR, filename)
             image_paths.append(image_path)
     image_paths.sort()
@@ -28,7 +28,7 @@ def test_crop() -> None:
             start_time = time.perf_counter()
             im = Image.open(image_path)
             cropped_image = im.crop((10, 10, 110, 110))
-            cropped_image.save(f"{OUTPUT_DIR}/{Path(image_path).stem}-cropped.jpg")
+            cropped_image.save(f"{OUTPUT_DIR}/{Path(image_path).stem}-crop{Path(image_path).suffix}")
             stop_time = time.perf_counter()
             duration = stop_time - start_time
             file.write(f'{duration}\n')
@@ -39,7 +39,7 @@ def test_compress() -> None:
         for image_path in image_paths:
             start_time = time.perf_counter()
             im = Image.open(image_path)
-            im.save(f"{OUTPUT_DIR}/{Path(image_path).stem}-compressed.jpg", 'JPEG', quality=COMPRESSED_QUALITY)
+            im.save(f"{OUTPUT_DIR}/{Path(image_path).stem}-compress{Path(image_path).suffix}", 'JPEG', quality=COMPRESSED_QUALITY)
             stop_time = time.perf_counter()
             duration = stop_time - start_time
             file.write(f'{duration}\n')
@@ -51,7 +51,7 @@ def test_resize() -> None:
             start_time = time.perf_counter()
             im = Image.open(image_path)
             im_resized = im.resize((im.width // 2, im.height // 2))
-            im_resized.save(f"{OUTPUT_DIR}/{Path(image_path).stem}-resized.jpg")
+            im_resized.save(f"{OUTPUT_DIR}/{Path(image_path).stem}-resize{Path(image_path).suffix}")
             stop_time = time.perf_counter()
             duration = stop_time - start_time
             file.write(f'{duration}\n')
@@ -62,7 +62,7 @@ def test_convert() -> None:
         for image_path in image_paths:
             start_time = time.perf_counter()
             im = Image.open(image_path)
-            im.save(f"{OUTPUT_DIR}/{Path(image_path).stem}-format.webp", 'WEBP', quality=100)
+            im.save(f"{OUTPUT_DIR}/{Path(image_path).stem}-convert.webp", 'WEBP', quality=100)
             stop_time = time.perf_counter()
             duration = stop_time - start_time
             file.write(f'{duration}\n')
