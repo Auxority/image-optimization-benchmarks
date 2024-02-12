@@ -8,7 +8,7 @@ source ./run-test.sh
 
 # Test cropping functionality
 TestCrop() {
-    RunTest "convert INPUT -crop 512x512+10+10 -quality 100 OUTPUT" "crop" $PERFORMANCE_FILE
+    RunTest "convert INPUT -crop 128x128+10+10 -quality 100 OUTPUT" "crop" $PERFORMANCE_FILE
 }
 
 # Test compression functionality

@@ -8,7 +8,7 @@ source ./run-test.sh
 
 # Test cropping functionality
 TestCrop() {
-    RunTest "ffmpeg -i INPUT -vf crop=512:512:10:10 -y -hide_banner -loglevel error OUTPUT" "crop" $PERFORMANCE_FILE
+    RunTest "ffmpeg -i INPUT -vf crop=128:128:10:10 -y -hide_banner -loglevel error OUTPUT" "crop" $PERFORMANCE_FILE
 }
 
 # Test compression functionality

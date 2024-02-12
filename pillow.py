@@ -23,7 +23,7 @@ def test_crop() -> None:
         for image_path in image_paths:
             start_time = time.perf_counter()
             im = Image.open(image_path)
-            cropped_image = im.crop((10, 10, 522, 522))
+            cropped_image = im.crop((10, 10, 138, 138))
             output_path = f"{OUTPUT_DIR}/{Path(image_path).stem}-crop{Path(image_path).suffix}"
             cropped_image.save(output_path, quality=100)
             stop_time = time.perf_counter()

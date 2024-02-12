@@ -23,7 +23,7 @@ def test_crop() -> None:
         for image_path in image_paths:
             start_time = time.perf_counter()
             im = cv2.imread(image_path)
-            cropped_image = im[10:522, 10:522]
+            cropped_image = im[10:138, 10:138]
             output_path = f"{OUTPUT_DIR}/{Path(image_path).stem}-crop{Path(image_path).suffix}"
             cv2.imwrite(output_path, cropped_image, [
                 cv2.IMWRITE_PNG_COMPRESSION, 0,

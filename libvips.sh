@@ -8,7 +8,7 @@ source ./run-test.sh
 
 # Test cropping functionality
 TestCrop() {
-    RunTest "vips crop INPUT OUTPUT 10 10 522 522 -Q 100" "crop" $PERFORMANCE_FILE
+    RunTest "vips crop INPUT OUTPUT 10 10 138 138 -Q 100" "crop" $PERFORMANCE_FILE
 }
 
 # Test compression functionality
