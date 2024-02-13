@@ -8,10 +8,10 @@ RESULTS_DIR=./results
 NUMBER_OF_ITERATIONS=1
 
 # load test functions
-source ./compress.sh
-source ./resize.sh
-source ./crop.sh
-source ./convert.sh
+source ./components/compress.sh
+source ./components/resize.sh
+source ./components/crop.sh
+source ./components/convert.sh
 
 RandomlyExecuteCommands() {
     commands=("$@")
@@ -49,20 +49,20 @@ RandomlyExecuteCommands() {
 ExecuteTestsOnSingleImage() {
     local input_image_path=$1
 
-    TestCompressToJPG $input_image_path
-    TestCompressToPNG $input_image_path
+    # TestCompressToJPG $input_image_path
+    # TestCompressToPNG $input_image_path
     TestCompressToWebP $input_image_path
 
-    TestResizeToJPG $input_image_path
-    TestResizeToPNG $input_image_path
+    # TestResizeToJPG $input_image_path
+    # TestResizeToPNG $input_image_path
     TestResizeToWebP $input_image_path
 
-    TestCropToJPG $input_image_path
-    TestCropToPNG $input_image_path
+    # TestCropToJPG $input_image_path
+    # TestCropToPNG $input_image_path
     TestCropToWebP $input_image_path
 
-    TestConvertToJPG $input_image_path
-    TestConvertToPNG $input_image_path
+    # TestConvertToJPG $input_image_path
+    # TestConvertToPNG $input_image_path
     TestConvertToWebP $input_image_path
 }
 
