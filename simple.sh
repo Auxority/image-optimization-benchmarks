@@ -1,13 +1,11 @@
 # !/bin/bash
 set -e
 
-# constants
 INPUT_DIR=./images/input
 OUTPUT_DIR=./images/output
 RESULTS_DIR=./results
 NUMBER_OF_ITERATIONS=1
 
-# load test functions
 source ./components/compress.sh
 source ./components/resize.sh
 source ./components/crop.sh
@@ -27,7 +25,6 @@ RandomlyExecuteCommands() {
     local image_file_name=$(basename "${input_image_path%.*}")
 
     for command in "${commands[@]}"; do
-        # get the tool name from the command
         local tool_name=$(echo $command | awk '{print $1}')
         # replace some unclear tool names with the actual tool names
         tool_name=$(echo $tool_name | sed "s|convert|imagemagick|g" | sed "s|gm|graphicsmagick|g")
