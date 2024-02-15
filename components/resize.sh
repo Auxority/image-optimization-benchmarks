@@ -42,3 +42,18 @@ TestResizeToWebP() {
 
     RandomlyExecuteCommands "${commands[@]}"
 }
+
+TestResizeToAvif() {
+    local input_image_path=$1
+    local operation_name=resize
+    local image_extension=avif
+
+    commands=(
+        "ffmpeg -i INPUT -vf scale=iw/2:ih/2 -y OUTPUT -hide_banner -loglevel error"
+        "vips resize INPUT OUTPUT[Q=100] 0.5"
+        "convert INPUT -resize 50% -quality 100 OUTPUT"
+        "gm convert INPUT -resize 50% -quality 100 OUTPUT"
+    )
+
+    RandomlyExecuteCommands "${commands[@]}"
+}

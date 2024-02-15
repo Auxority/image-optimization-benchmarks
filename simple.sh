@@ -49,21 +49,25 @@ RandomlyExecuteCommands() {
 ExecuteTestsOnSingleImage() {
     local input_image_path=$1
 
-    # TestCompressToJPG $input_image_path
-    # TestCompressToPNG $input_image_path
+    TestCompressToJPG $input_image_path
+    TestCompressToPNG $input_image_path
     TestCompressToWebP $input_image_path
+    TestCompressToAvif $input_image_path
 
-    # TestResizeToJPG $input_image_path
-    # TestResizeToPNG $input_image_path
+    TestResizeToJPG $input_image_path
+    TestResizeToPNG $input_image_path
     TestResizeToWebP $input_image_path
+    TestResizeToAvif $input_image_path
 
-    # TestCropToJPG $input_image_path
-    # TestCropToPNG $input_image_path
+    TestCropToJPG $input_image_path
+    TestCropToPNG $input_image_path
     TestCropToWebP $input_image_path
+    TestCropToAvif $input_image_path
 
-    # TestConvertToJPG $input_image_path
-    # TestConvertToPNG $input_image_path
+    TestConvertToJPG $input_image_path
+    TestConvertToPNG $input_image_path
     TestConvertToWebP $input_image_path
+    TestConvertToAvif $input_image_path
 }
 
 ShowProgress() {
@@ -75,12 +79,11 @@ ShowProgress() {
 }
 
 ExecuteTestsOnAllImages() {
-    total_image_count=$(ls -v $INPUT_DIR/*.{jpg,jpeg,png,webp} 2>/dev/null | wc -l)
+    all_files=$(find $INPUT_DIR -type f \( -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" -o -name "*.webp" -o -name "*.avif" \) -print0 | xargs -0 ls -v)
+    total_image_count=$(echo $all_files | wc -w)
     current_image=0
 
-    # iterate over all the images in the ./images/input directory in alphabetical order while silently ignoring errors.
-    for input_image_path in $(ls -v $INPUT_DIR/*.{jpg,jpeg,png,webp} 2>/dev/null); do
-        # skip if the file does not exist.
+    for input_image_path in $all_files; do
         if [ ! -f "$input_image_path" ]; then
             continue
         fi

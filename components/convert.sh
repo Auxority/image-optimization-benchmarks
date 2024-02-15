@@ -26,3 +26,18 @@ TestConvertToPNG() {
 TestConvertToWebP() {
     TestConvertTo $1 "webp"
 }
+
+TestConvertToAvif() {
+    local input_image_path=$1
+    local image_extension="avif"
+    local operation_name="convert"
+
+    local commands=(
+        "ffmpeg -i INPUT -crf 0 -y -hide_banner -loglevel error OUTPUT"
+        "vips copy INPUT OUTPUT[Q=$IMAGE_QUALITY]"
+        "convert INPUT -quality $IMAGE_QUALITY OUTPUT"
+        "gm convert INPUT -quality $IMAGE_QUALITY OUTPUT"
+    )
+
+    RandomlyExecuteCommands "${commands[@]}"
+}
