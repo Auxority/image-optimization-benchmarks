@@ -4,7 +4,7 @@ TestResizeToJPG() {
     local image_extension=jpg
 
     commands=(
-        "ffmpeg -i INPUT -vf scale=iw/2:ih/2 -q:v 1 OUTPUT -y -hide_banner -loglevel error"
+        "ffmpeg -i INPUT -vf scale=iw/2:ih/2 OUTPUT -y -hide_banner -loglevel error"
         "vips resize INPUT OUTPUT[Q=100] 0.5"
         "convert INPUT -resize 50% -quality 100 OUTPUT"
         "gm convert INPUT -resize 50% -quality 100 OUTPUT"
